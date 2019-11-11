@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            font-family: helvetica;
+            font-size: 14px;
+        }
+
+        #cy {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 999;
+        }
+
+        h1 {
+            opacity: 0.5;
+            font-size: 1em;
+        }
+
+
+    </style>
+
+    <link href="public/stylesheets/toastr.min.css" rel="stylesheet"/>
+
+
+    <script src="public/javascripts/cytoscape.min.js"></script>
+    <script src="public/javascripts/popper.js"></script>
+    <script src="public/javascripts/cytoscape-popper.js"></script>
+
+    <script src="public/javascripts/index.all.min.js"></script>
+    <link rel="stylesheet" href="public/stylesheets/index.css"/>
+
+
+    <script src="public/javascripts/jquery-1.11.1.min.js"></script>
+    <script src="public/javascripts/toastr.min.js"></script>
+
+
+    <script src="public/javascripts/ContextMenu.js"></script>
+    <script src="public/javascripts/utils.js"></script>
+    <link href="public/stylesheets/style.css" rel="stylesheet" type="text/css"/>
+
+    <link href="public/stylesheets/all.min.css" rel="stylesheet" type="text/css"/>
+    <link href="public/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
+
+    <script src="public/javascripts/dagre.js"></script>
+    <script src="public/javascripts/cytoscape-dagre.js"></script>
+
+    <script src="public/javascripts/cytoscape-cxtmenu.js"></script>
+
+
+    <!--<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
+    <!-- <link href="/main.css" rel="stylesheet">-->
+    <!--  <script src="/webjars/jquery/jquery.min.js"></script>-->
+    <script src="public/javascripts/sockjs.min.js"></script>
+    <script src="public/javascripts/stomp.min.js"></script>
+    <script src="public/javascripts/app.js"></script>
+    <link href="public/stylesheets/animation-icons.css" rel="stylesheet" type="text/css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.js"></script>
+    
+<script src="public/javascripts/cytoscape-edgehandles.js"></script>
+
+    <style>
+
+        #progressTip {
+            width: 170px;
+
+            height: 70px;
+            padding-top: 10px;
+            color: #FFC045;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create a node</h4>
+            </div>
+            <div class="modal-body">
+                <select title="Choose type of service" id="service_type" , label="Choose type of service">
+                    <option>TMS</option>
+                    <option>GEMS</option>
+                    <option>RBAC</option>
+                    <option>QRS</option>
+                    <option>FLW</option>
+                    <option>PS</option>
+                    <option>FUSE</option>
+                    <option>B3X</option>
+                </select>
+                <select onchange="showHideOutcome(this.value)" id="branch_type">
+                    <option>tag</option>
+                    <option>master</option>
+                    <option selected="selected">develop</option>
+                    <option>Any branch</option>
+                </select>
+                <input type="text" name="outcome" id="outcome" hidden="hidden"/>
+                <p>Some text in the modal.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modal-done" onclick='modalWork(this)' class="btn btn-default">Done
+                </button>
+                <button type="button" id="modal-cancel" onclick='modalWork(this)' class="btn btn-default">Cancel
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="wrapper">
+
+    <!--
+    <div id="sidebar-wrapper">
+        <form>
+            <div class="form-group row">
+                <label for="owner" class="col-sm-2 col-form-label">Owner</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="owner" value="Abhiram">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-2 col-form-label">Git </label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                           value="email@example.com">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                </div>
+            </div>
+        </form>
+    </div>-->
+    <div id="cy">
+
+    </div>
+</div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var cy;
+        $.getJSON("public/graph.json", function (data) {
+            cy = window.cy = cytoscape({
+                container: document.getElementById('cy'), // container to render in
+                zoom: 1,
+                minZoom: 1,
+                maxZoom: 5,
+                elements: data,
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+
+                            'label': 'data(value.sn)',
+                            'text-valign': 'center',
+                            'font-size': '.7em',
+                            'color': '#FFC045',
+                            'background-color': '#0A5471',
+                            'ghost': 'yes',
+                            'ghost-offset-x': 1,
+                            'ghost-offset-y': 1,
+                            'ghost-opacity': 0.3
+                        }
+                    },
+                    {
+
+                        selector: ':parent',
+                        style: {
+
+                            'label': 'data(value.sn)',
+                            'text-valign': 'center',
+                            'font-size': '.7em',
+                            'color': '#000000',
+                            'background-color': '#efefef',
+
+                        }
+                    },
+                    {
+                        selector: ':parent.highlighted',
+                        style: {
+
+                            'line-color': '#fe5434',
+                            'color': 'yellow',
+                            'target-arrow-color': '#0A5471',
+                            'transition-property': 'background-color, line-color, target-arrow-color',
+                            'transition-duration': '0.1s'
+                        }
+                    },
+
+
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 1,
+                            'target-arrow-shape': 'triangle',
+                            'line-color': '#0A2332',
+                            'target-arrow-color': '#0A2332',
+                            'curve-style': 'bezier',
+                            'ghost': 'yes',
+                            'ghost-offset-x': 1,
+                            'ghost-offset-y': 1,
+                            'ghost-opacity': 0.3
+                        }
+                    }
+                    ,
+                    {
+
+                        selector: '.highlighted',
+                        style: {
+                            'background-color': '#0E91AB',
+                            'line-color': '#0A5471',
+                            'color': 'yellow',
+                            'target-arrow-color': '#0A5471',
+                            'transition-property': 'background-color, line-color, target-arrow-color',
+                            'transition-duration': '0.1s'
+                        }
+                    },
+                    {
+                        selector: '.eh-handle',
+                        style: {
+                            'background-color': 'red',
+                            'width': 12,
+                            'height': 12,
+                            'shape': 'ellipse',
+                            'overlay-opacity': 0,
+                            'border-width': 12, // makes the handle easier to hit
+                            'border-opacity': 0
+                        }
+                    },
+
+                    {
+                        selector: '.eh-hover',
+                        style: {
+                            'background-color': 'red'
+                        }
+                    },
+
+                    {
+                        selector: '.eh-source',
+                        style: {
+                            'border-width': 2,
+                            'border-color': 'red'
+                        }
+                    },
+
+                    {
+                        selector: '.eh-target',
+                        style: {
+                            'border-width': 2,
+                            'border-color': 'red'
+                        }
+                    },
+
+                    {
+                        selector: '.eh-preview, .eh-ghost-edge',
+                        style: {
+                            'background-color': 'red',
+                            'line-color': 'red',
+                            'target-arrow-color': 'red',
+                            'source-arrow-color': 'red'
+                        }
+                    },
+
+                    {
+                        selector: '.eh-ghost-edge.eh-preview-active',
+                        style: {
+                            'opacity': 0
+                        }
+                    }
+                ],
+                layout: {
+                    name: 'dagre',
+                    rankDir: 'BT',
+                    align: 'DR'
+
+                    // ranker:'longest-path'
+
+                }
+            });
+            buildToolsTips(cy);
+            buildContextMenu(cy);
+
+
+            cy.on('tap', 'node', function (evt) {
+                evt.preventDefault();
+                var node = evt.target;
+                //facePath(node);
+                currentPathSelected = [];
+
+                tracePath(node);
+                // lastNode='';
+                console.log('tapped ' + node.id());
+            });
+
+
+        });
+
+
+        /* document.querySelector('#draw-on').addEventListener('click', function() {
+           eh.enableDrawMode();
+         });
+
+         document.querySelector('#draw-off').addEventListener('click', function() {
+           eh.disableDrawMode();
+         });
+
+         document.querySelector('#start').addEventListener('click', function() {
+           eh.start( cy.$('node:selected') );
+         });*/
+        connect();
+
+    });
+
+    var eh;
+    var lastSelectedPath;
+    var lastNode;
+
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+       /* document.querySelector('#draw-on').addEventListener('click', function() {
+          eh.enableDrawMode();
+        });
+
+        document.querySelector('#draw-off').addEventListener('click', function() {
+          eh.disableDrawMode();
+        });
+
+        document.querySelector('#start').addEventListener('click', function() {
+          eh.start( cy.$('node:selected') );
+        });*/
+    });
+
+
+    connect();
+    var eh;
+    var lastSelectedPath;
+    var lastNode;
+</script>
+
+</body>
+</html>
