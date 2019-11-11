@@ -54,12 +54,6 @@
 
     <script src="public/javascripts/cytoscape-cxtmenu.js"></script>
 
-
-    <!--<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
-    <!-- <link href="/main.css" rel="stylesheet">-->
-    <!--  <script src="/webjars/jquery/jquery.min.js"></script>-->
-    <script src="public/javascripts/sockjs.min.js"></script>
-    <script src="public/javascripts/stomp.min.js"></script>
     <script src="public/javascripts/app.js"></script>
     <link href="public/stylesheets/animation-icons.css" rel="stylesheet" type="text/css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -87,67 +81,14 @@
 
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Create a node</h4>
-            </div>
-            <div class="modal-body">
-                <select title="Choose type of service" id="service_type" , label="Choose type of service">
-                    <option>TMS</option>
-                    <option>GEMS</option>
-                    <option>RBAC</option>
-                    <option>QRS</option>
-                    <option>FLW</option>
-                    <option>PS</option>
-                    <option>FUSE</option>
-                    <option>B3X</option>
-                </select>
-                <select onchange="showHideOutcome(this.value)" id="branch_type">
-                    <option>tag</option>
-                    <option>master</option>
-                    <option selected="selected">develop</option>
-                    <option>Any branch</option>
-                </select>
-                <input type="text" name="outcome" id="outcome" hidden="hidden"/>
-                <p>Some text in the modal.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="modal-done" onclick='modalWork(this)' class="btn btn-default">Done
-                </button>
-                <button type="button" id="modal-cancel" onclick='modalWork(this)' class="btn btn-default">Cancel
-                </button>
-
-            </div>
+         
         </div>
 
     </div>
 </div>
 <div id="wrapper">
 
-    <!--
-    <div id="sidebar-wrapper">
-        <form>
-            <div class="form-group row">
-                <label for="owner" class="col-sm-2 col-form-label">Owner</label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="owner" value="Abhiram">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-2 col-form-label">Git </label>
-                <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                           value="email@example.com">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
-                <div class="col-sm-10">
-                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-                </div>
-            </div>
-        </form>
-    </div>-->
+    
     <div id="cy">
 
     </div>
@@ -295,7 +236,6 @@
 
                 }
             });
-            buildToolsTips(cy);
             buildContextMenu(cy);
 
 
