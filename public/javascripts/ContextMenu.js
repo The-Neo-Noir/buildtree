@@ -87,14 +87,6 @@ function buildContextMenu(cy) {
 
         commands: [
             {
-                content: 'null',
-                select: function () {
-                    sendName();
-                    console.log('null');
-                }
-            },
-
-            {
                 content: 'add',
                 select: function () {
                     $('#myModal').modal();
@@ -104,76 +96,6 @@ function buildContextMenu(cy) {
         ]
     });
 }
-
-
-var masterdata =
-    {
-        'TMS': {
-            parent: 'tms',
-            sn: 'tms',
-            service_name: 'tenant-management-service',
-            giturl: 'http://10.201.39.34/git/Base3x/tms.git',
-            type: 'service',
-            build_location: 'tms-core'
-        },
-        'GEMS': {
-            parent: 'gems',
-            sn: 'gems',
-            service_name: 'global-ecosystem-management-system',
-            giturl: 'http://10.201.39.34/git/Base3x/global-ecosystem-management-service.git',
-            type: 'service',
-            build_location: ''
-        },
-        'RBAC': {
-            parent: 'rbac',
-            sn: 'rbac',
-            service_name: 'rbacl-auth-server',
-            giturl: 'http://10.201.39.34/git/Base3x/rbacl-auth-server.git',
-            type: 'service',
-            build_location: ''
-        },
-        'FLW': {
-            parent: 'flw',
-            sn: 'fwr',
-            service_name: 'flowable-rest',
-            giturl: 'http://10.201.39.34/git/Base3x/flowable-listener.git',
-            type: 'service',
-            build_location: ''
-        },
-        'PS': {
-            parent: 'ps',
-            sn: 'ps',
-            service_name: 'process-services',
-            giturl: 'http://10.201.39.34/git/Base3x/process-services.git',
-            type: 'service',
-            build_location: ''
-        },
-        'QRS': {
-            parent: 'qrs',
-            sn: 'qrs',
-            service_name: 'Queue-Services',
-            giturl: 'http://10.201.39.34/git/Base3x/qrs.git',
-            type: 'service',
-            build_location: ''
-        },
-        'FUSE': {
-            parent: 'fuse',
-            sn: 'fuse',
-            service_name: 'fuse-gateway',
-            giturl: 'http://10.201.39.34/git/Base3x/fuse-gateway.git',
-            type: 'service',
-            build_location: ''
-        },
-        'B3X': {
-            sn: 'b3x',
-            parent: 'b3x',
-            service_name: 'base-IDE',
-            giturl: 'http://10.201.39.34/git/Base3x/Base-IDE.git',
-            type: 'service',
-            env_data:"RBACLAUTH_URL=http://rbacl-auth-server:8070;AUDIT_SERVER_URL=http://spotify-kafka-base3x:2181;GEMS_URL=http://global-ecosystem-management-service:8084;PSQL_URL=http://postgres-base3x:5432;PROCESS_SERVICE_URL=http://process-services:8088;GATEWAY_URL=http://fuse-gateway:8280;QRS_URL=http://qrs:8082",
-            build_location: ''
-        }
-    };
 var returns;
 
 function modalWork(obj) {
