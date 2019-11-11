@@ -65,6 +65,5 @@ function showHideOutcome(value) {
     } else {
         $('#outcome').hide();
     }
-
+    
 }
-});
